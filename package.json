@@ -1,10 +1,13 @@
 {
-  "name": "loc",
+  "name": "@douglasnaphas/loc",
   "version": "1.0.0",
   "description": "How many lines of code has the current user written in GitHub?",
   "main": "index.js",
   "bin": "./cli.js",
-  "files": ["cli.js", "index.js"],
+  "files": [
+    "cli.js",
+    "index.js"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc",
