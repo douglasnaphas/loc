@@ -4,7 +4,9 @@
   "description": "How many lines of code has the current user written in GitHub?",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/douglasnaphas/loc/issues"
   },
-  "homepage": "https://github.com/douglasnaphas/loc#readme"
+  "homepage": "https://github.com/douglasnaphas/loc#readme",
+  "devDependencies": {
+    "typescript": "^4.4.2"
+  }
 }
