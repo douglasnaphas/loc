@@ -1,6 +1,6 @@
 {
   "name": "@douglasnaphas/loc",
-  "version": "1.0.0",
+  "version": "0.1.0-e",
   "description": "How many lines of code has the current user written in GitHub?",
   "main": "index.js",
   "bin": "./cli.js",
