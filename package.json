@@ -4,7 +4,10 @@
   "description": "How many lines of code has the current user written in GitHub?",
   "main": "index.js",
   "bin": "./cli.js",
-  "files": ["cli.js", "index.js"],
+  "files": [
+    "cli.js",
+    "index.js"
+  ],
   "scripts": {
     "test": "jest",
     "build": "tsc",
@@ -21,8 +24,7 @@
   },
   "homepage": "https://github.com/douglasnaphas/loc#readme",
   "devDependencies": {
-    "jest": "^27.1.0",
-    "typescript": "^4.4.2"
+    "jest": "^27.1.0"
   },
   "dependencies": {
     "axios": "^0.21.1",

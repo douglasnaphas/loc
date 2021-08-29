@@ -45,7 +45,7 @@
   }
   const loc = require("./index.js");
   await loc.print_user(token);
-})().catch((err: Error) => {
+})().catch((err) => {
   console.error("Error encountered");
   console.error(err.message);
   process.exit(1);
