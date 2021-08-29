@@ -9,7 +9,7 @@
     "index.js"
   ],
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "build": "tsc",
     "watch": "tsc -w"
   },
