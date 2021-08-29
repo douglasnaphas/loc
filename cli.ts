@@ -10,7 +10,7 @@
     "#authenticating-with-graphql";
   program
     .name("loc")
-    .version("0.1.0")
+    .version("0.1.0-f")
     .description(
       "Print info about lines of code contributed to GitHub by the authenticated" +
         " GitHub user. Prints something like:" +
