@@ -52,7 +52,7 @@ import { sub } from "date-fns";
     console.error(`Token file ${tokenFile} does not exist.`);
     process.exit(3);
   }
-  let token;
+  let token: string;
   try {
     fs.accessSync(tokenFile, fs.constants.F_OK & fs.constants.R_OK);
     token = fs.readFileSync(tokenFile, "utf8").trim();
@@ -91,9 +91,34 @@ import { sub } from "date-fns";
     author,
   });
   // console.log(JSON.stringify(searchResults1));
+  // contributions.map(async (contribution: any) => {
+  //   const { owner } = contribution;
+  //   const repo = contribution.name;
+  //   const commits = await LOC.searchCommitsByUserAndDatename({
+  //     token,
+  //     owner,
+  //     repo,
+  //     fromDate,
+  //     toDate,
+  //     author,
+  //   });
+  //   console.log(`commits in ${owner}/${repo}:`);
+  //   console.log(JSON.stringify(commits));
+  //   for (let j = 0; j < commits.length; j++) {
+  //     const ref = commits[j];
+  //     const stats = await LOC.getAdditionsAndDeletionsForCommit({
+  //       token,
+  //       owner,
+  //       repo,
+  //       ref,
+  //     });
+  //     console.log(JSON.stringify(stats));
+  //   }
+  // });
   for (let i = 0; i < contributions.length; i++) {
-    const { owner } = contributions[i];
-    const repo = contributions[i].name;
+    const contribution = contributions[i];
+    const { owner } = contribution;
+    const repo = contribution.name;
     const commits = await LOC.searchCommitsByUserAndDatename({
       token,
       owner,
