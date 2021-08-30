@@ -4,7 +4,7 @@ exports.loc = () => {
   console.log("loc");
 };
 const GITHUB_GRAPHQL_URL = "https://api.github.com/graphql";
-exports.print_user = async (token: string) => {
+const print_user = async (token: string) => {
   await axios
     .post(
       GITHUB_GRAPHQL_URL,
@@ -29,8 +29,11 @@ exports.print_user = async (token: string) => {
       process.exit(1);
     });
 };
-
-const contributions: (token: string) => any = async (token: string) => {
+// exports.print_user = print_user;
+const contributions: (token: string, fromDate: Date) => any = async (
+  token: string,
+  fromDate: Date
+) => {
   const r = await axios
     .post(
       GITHUB_GRAPHQL_URL,
@@ -77,9 +80,15 @@ const contributions: (token: string) => any = async (token: string) => {
   return r;
 };
 
-exports.contributions = contributions;
+// exports.contributions = contributions;
 
 const f1: (token: string) => string = (token: string) => "not implemented";
 const f2: (token: string) => Promise<string> = async (token: string) =>
   "not implemented";
-exports.checkTokenScope = async (token: string) => "not implemented";
+// exports.checkTokenScope = async (token: string) => "not implemented";
+
+export class LOC {
+  public static contributions(token: string, fromDate: Date) {
+    return contributions(token, fromDate);
+  }
+}

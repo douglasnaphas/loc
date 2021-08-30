@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+import { LOC } from "./index";
 (async () => {
   const program = require("commander");
   const fs = require("fs");
@@ -43,8 +44,11 @@
     console.error(`Unable to read token file ${tokenFile}.`);
     process.exit(4);
   }
-  const loc = require("./index.js");
-  const contributions = await loc.contributions(token);
+  // const loc = require("./index.js");
+  const contributions = await LOC.contributions(
+    token,
+    new Date(Date.parse("2021-07-20T00:00:00Z"))
+  );
   console.log(JSON.stringify(contributions));
 })().catch((err: Error) => {
   console.error("Error encountered");
