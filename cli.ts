@@ -80,17 +80,32 @@ import { sub } from "date-fns";
   }
   let toDate = defaults.endDate;
   if (endDate) toDate = new Date(endDate);
-  const user = await LOC.user(token);
-  // console.log(user);
+  const author = await LOC.user(token);
   const contributions = await LOC.contributions(token, fromDate, toDate);
-  // console.log(JSON.stringify(contributions));
   const searchResults1 = await LOC.searchCommitsByUserAndDatename({
     token,
+    owner: "douglasnaphas",
+    repo: "madliberation",
     fromDate,
     toDate,
-    author: user,
+    author,
   });
-  console.log(JSON.stringify(searchResults1));
+  // console.log(JSON.stringify(searchResults1));
+  for (let i = 0; i < contributions.length; i++) {
+    const { owner } = contributions[i];
+    const repo = contributions[i].name;
+    const commits = await LOC.searchCommitsByUserAndDatename({
+      token,
+      owner,
+      repo,
+      fromDate,
+      toDate,
+      author,
+    });
+    console.log(`commits in ${owner}/${repo}:`);
+    console.log(JSON.stringify(commits));
+    console.log("");
+  }
 })().catch((err: Error) => {
   console.error("Error encountered");
   console.error(err.message);

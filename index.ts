@@ -53,7 +53,10 @@ const contributions = async (token: string, fromDate: Date, toDate: Date) => {
                   nodes {
                     commitCount
                     repository {
-                      nameWithOwner
+                      owner {
+                        login
+                      }
+                      name
                     }
                   }
                 }
@@ -78,12 +81,19 @@ const contributions = async (token: string, fromDate: Date, toDate: Date) => {
       process.exit(1);
     });
   return r.data.viewer.contributionsCollection.commitContributionsByRepository.map(
-    (c: any) => c.contributions.nodes[0].repository.nameWithOwner
+    (c: any) => {
+      return {
+        owner: c.contributions.nodes[0].repository.owner.login,
+        name: c.contributions.nodes[0].repository.name,
+      };
+    }
   );
 };
 
 export interface SearchCommitsByUserAndDateProps {
   token: string;
+  owner: string;
+  repo: string;
   fromDate: Date;
   toDate: Date;
   author: string;
@@ -91,28 +101,18 @@ export interface SearchCommitsByUserAndDateProps {
 const searchCommitsByUserAndDate = async (
   props: SearchCommitsByUserAndDateProps
 ) => {
-  const { token, fromDate, toDate, author } = props;
-  const fromDateString = fromDate.toISOString().substring(0, 10);
-  const toDateString = toDate.toISOString().substring(0, 10);
-  const dateRangeString = `${fromDateString}..${toDateString}`;
+  const { token, owner, repo, fromDate, toDate, author } = props;
+  const since = fromDate.toISOString();
+  const until = toDate.toISOString();
   const octokit = new Octokit({ auth: token });
-  const response = await octokit.request("GET /search/commits", {
-    // q: `committer-email=${author}@gmail.com&committer-date=${dateRangeString}&repo=douglasnaphas/madliberation`,
-    // q: `author-name="Douglas Naphas <douglasnaphas@gmail.com>"&committer-date=${dateRangeString}`,
-    // q: `hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05`, /* gives a result */
-    // q: `hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05&committer-date=${dateRangeString}` /* gives a result */,
-    // q: `hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05&committer-date=${dateRangeString}&author-name="Douglas Naphas"` /* gives a result */,
-    // q: `hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05&committer-date=${dateRangeString}&author-name="Douglas Naphas"` /* got results */,
-    // q: `committer-date=${dateRangeString}&author-name="Douglas Naphas"` /* no results, only difference is no hash */,
-    // q: `repo="douglasnaphas/madliberation"&committer-date=${dateRangeString}&author-name="Douglas Naphas"`, /* no results */
-    // q: `repo="douglasnaphas/madliberation"&committer-date=${dateRangeString}&author-name="Douglas Naphas"&hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05` /* got results */,
-    // q: `repo="douglasnaphas/madliberations"&committer-date=${dateRangeString}&author-name="Douglas Naphas"&hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05` /* no results, deliberate misspell of repo name */,
-    // q: `user="douglasnaphas"&committer-date=${dateRangeString}&author-name="Douglas Naphas"&hash=4b78cfacec8d030ae06ab04f3f7a859e6a480a05`, /* got results */
-    q: `user="douglasnaphas"&committer-date=${dateRangeString}&author-name="Douglas Naphas"`,
-
-    mediaType: { previews: ["cloak"] },
+  const response = await octokit.request("GET /repos/{owner}/{repo}/commits", {
+    owner,
+    repo,
+    since,
+    until,
+    author,
   });
-  return response;
+  return response.data.map((c) => c.sha);
 };
 
 export class LOC {
