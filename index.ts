@@ -48,9 +48,8 @@ const contributions = async (token: string, fromDate: Date, toDate: Date) => {
                   }
                   nodes {
                     commitCount
-                    resourcePath
                     repository {
-                      name
+                      nameWithOwner
                     }
                   }
                 }
@@ -74,7 +73,9 @@ const contributions = async (token: string, fromDate: Date, toDate: Date) => {
       console.error(err.message);
       process.exit(1);
     });
-  return r;
+  return r.data.viewer.contributionsCollection.commitContributionsByRepository.map(
+    (c: any) => c.contributions.nodes[0].repository.nameWithOwner
+  );
 };
 
 export class LOC {
