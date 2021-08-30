@@ -30,6 +30,55 @@ exports.print_user = async (token: string) => {
     });
 };
 
+const contributions: (token: string) => any = async (token: string) => {
+  const r = await axios
+    .post(
+      GITHUB_GRAPHQL_URL,
+      {
+        query: `query {
+          viewer {
+            login
+            contributionsCollection(from: "2021-07-25T00:00:00Z") {
+              commitContributionsByRepository {
+                contributions(first: 100) {
+                  pageInfo {
+                    startCursor
+                    endCursor
+                    hasNextPage
+                  }
+                  nodes {
+                    commitCount
+                    resourcePath
+                    repository {
+                      name
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }`,
+      },
+      {
+        headers: {
+          Authorization: `bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((r: AxiosResponse) => {
+      return r.data;
+    })
+    .catch((err: Error) => {
+      console.error(`problem encountered getting the user`);
+      console.error(err.message);
+      process.exit(1);
+    });
+  return r;
+};
+
+exports.contributions = contributions;
+
 const f1: (token: string) => string = (token: string) => "not implemented";
 const f2: (token: string) => Promise<string> = async (token: string) =>
   "not implemented";

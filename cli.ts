@@ -44,7 +44,8 @@
     process.exit(4);
   }
   const loc = require("./index.js");
-  await loc.print_user(token);
+  const contributions = await loc.contributions(token);
+  console.log(JSON.stringify(contributions));
 })().catch((err: Error) => {
   console.error("Error encountered");
   console.error(err.message);
