@@ -1,5 +1,6 @@
 import { AxiosResponse } from "axios";
 const axios = require("axios");
+
 exports.loc = () => {
   console.log("loc");
 };
@@ -29,11 +30,7 @@ const print_user = async (token: string) => {
       process.exit(1);
     });
 };
-// exports.print_user = print_user;
-const contributions: (token: string, fromDate: Date) => any = async (
-  token: string,
-  fromDate: Date
-) => {
+const contributions = async (token: string, fromDate: Date, toDate: Date) => {
   const r = await axios
     .post(
       GITHUB_GRAPHQL_URL,
@@ -41,7 +38,7 @@ const contributions: (token: string, fromDate: Date) => any = async (
         query: `query {
           viewer {
             login
-            contributionsCollection(from: "2021-07-25T00:00:00Z") {
+            contributionsCollection(from: "${fromDate.toISOString()}", to: "${toDate.toISOString()}") {
               commitContributionsByRepository {
                 contributions(first: 100) {
                   pageInfo {
@@ -80,15 +77,11 @@ const contributions: (token: string, fromDate: Date) => any = async (
   return r;
 };
 
-// exports.contributions = contributions;
-
-const f1: (token: string) => string = (token: string) => "not implemented";
-const f2: (token: string) => Promise<string> = async (token: string) =>
-  "not implemented";
-// exports.checkTokenScope = async (token: string) => "not implemented";
-
 export class LOC {
-  public static contributions(token: string, fromDate: Date) {
-    return contributions(token, fromDate);
+  public static contributions(token: string, fromDate: Date, toDate: Date) {
+    return contributions(token, fromDate, toDate);
+  }
+  public static print_user(token: string) {
+    return print_user(token);
   }
 }

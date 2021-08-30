@@ -1,11 +1,17 @@
 #!/usr/bin/env node
 
 import { LOC } from "./index";
+import { sub } from "date-fns";
 (async () => {
   const program = require("commander");
   const fs = require("fs");
 
-  const defaults = {};
+  const now = new Date();
+  const defaultRangeInDays = 30;
+  const defaults = {
+    beginningDate: sub(now, { days: defaultRangeInDays }),
+    endDate: now,
+  };
   const AUTH_W_GITHUB_URL =
     "https://developer.github.com/v4/guides/forming-calls/" +
     "#authenticating-with-graphql";
@@ -22,9 +28,19 @@ import { LOC } from "./index";
       "-t, --token-file <PATH>",
       `Path to a GitHub authentication token, see ${AUTH_W_GITHUB_URL}`
     )
+    .option(
+      "-b, --beginning-date <DATE>",
+      `Query starting from this date, ISO format like '2021-06-01'` +
+        `, default 30 days ago`
+    )
+    .option(
+      "-e, --end-date <DATE>",
+      `Query up through this date, ISO format like '2021-06-30'` +
+        `, default today`
+    )
     .parse(process.argv);
   const options = program.opts();
-  const { tokenFile } = options;
+  const { tokenFile, beginningDate, endDate } = options;
   if (!tokenFile) {
     console.error(
       `A file with a GitHub authentication token must be specified` +
@@ -44,11 +60,27 @@ import { LOC } from "./index";
     console.error(`Unable to read token file ${tokenFile}.`);
     process.exit(4);
   }
-  // const loc = require("./index.js");
-  const contributions = await LOC.contributions(
-    token,
-    new Date(Date.parse("2021-07-20T00:00:00Z"))
-  );
+
+  // make sure dates are valid
+  if (beginningDate && !Date.parse(beginningDate)) {
+    console.error(
+      `Could not parse beginningDate ${beginningDate}, use something like '2020-06-30'`
+    );
+    process.exit(1);
+  }
+  if (endDate && !Date.parse(endDate)) {
+    console.error(
+      `Could not parse endDate ${endDate}, use something like '2020-06-30'`
+    );
+    process.exit(1);
+  }
+  let fromDate = defaults.beginningDate;
+  if (beginningDate) {
+    fromDate = new Date(beginningDate);
+  }
+  let toDate = defaults.endDate;
+  if (endDate) toDate = new Date(endDate);
+  const contributions = await LOC.contributions(token, fromDate, toDate);
   console.log(JSON.stringify(contributions));
 })().catch((err: Error) => {
   console.error("Error encountered");
