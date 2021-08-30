@@ -90,31 +90,7 @@ import { sub } from "date-fns";
     toDate,
     author,
   });
-  // console.log(JSON.stringify(searchResults1));
-  // contributions.map(async (contribution: any) => {
-  //   const { owner } = contribution;
-  //   const repo = contribution.name;
-  //   const commits = await LOC.searchCommitsByUserAndDatename({
-  //     token,
-  //     owner,
-  //     repo,
-  //     fromDate,
-  //     toDate,
-  //     author,
-  //   });
-  //   console.log(`commits in ${owner}/${repo}:`);
-  //   console.log(JSON.stringify(commits));
-  //   for (let j = 0; j < commits.length; j++) {
-  //     const ref = commits[j];
-  //     const stats = await LOC.getAdditionsAndDeletionsForCommit({
-  //       token,
-  //       owner,
-  //       repo,
-  //       ref,
-  //     });
-  //     console.log(JSON.stringify(stats));
-  //   }
-  // });
+  const locStats = [];
   for (let i = 0; i < contributions.length; i++) {
     const contribution = contributions[i];
     const { owner } = contribution;
@@ -127,8 +103,8 @@ import { sub } from "date-fns";
       toDate,
       author,
     });
-    console.log(`commits in ${owner}/${repo}:`);
-    console.log(JSON.stringify(commits));
+    // console.log(`commits in ${owner}/${repo}:`);
+    // console.log(JSON.stringify(commits));
     for (let j = 0; j < commits.length; j++) {
       const ref = commits[j];
       const stats = await LOC.getAdditionsAndDeletionsForCommit({
@@ -137,9 +113,11 @@ import { sub } from "date-fns";
         repo,
         ref,
       });
-      console.log(JSON.stringify(stats));
+      // console.log(JSON.stringify(stats));
+      locStats.push({ owner, repo, ref, stats });
     }
   }
+  console.log(JSON.stringify(locStats));
 })().catch((err: Error) => {
   console.error("Error encountered");
   console.error(err.message);
