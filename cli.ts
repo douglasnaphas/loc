@@ -80,8 +80,17 @@ import { sub } from "date-fns";
   }
   let toDate = defaults.endDate;
   if (endDate) toDate = new Date(endDate);
+  const user = await LOC.user(token);
+  // console.log(user);
   const contributions = await LOC.contributions(token, fromDate, toDate);
-  console.log(JSON.stringify(contributions));
+  // console.log(JSON.stringify(contributions));
+  const searchResults1 = await LOC.searchCommitsByUserAndDatename({
+    token,
+    fromDate,
+    toDate,
+    author: user,
+  });
+  console.log(JSON.stringify(searchResults1));
 })().catch((err: Error) => {
   console.error("Error encountered");
   console.error(err.message);
