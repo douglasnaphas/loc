@@ -28,6 +28,7 @@
     "typescript": "^4.4.2"
   },
   "dependencies": {
+    "@octokit/core": "^3.5.1",
     "axios": "^0.21.1",
     "commander": "^8.1.0",
     "date-fns": "^2.23.0"
