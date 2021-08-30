@@ -104,7 +104,16 @@ import { sub } from "date-fns";
     });
     console.log(`commits in ${owner}/${repo}:`);
     console.log(JSON.stringify(commits));
-    console.log("");
+    for (let j = 0; j < commits.length; j++) {
+      const ref = commits[j];
+      const stats = await LOC.getAdditionsAndDeletionsForCommit({
+        token,
+        owner,
+        repo,
+        ref,
+      });
+      console.log(JSON.stringify(stats));
+    }
   }
 })().catch((err: Error) => {
   console.error("Error encountered");

@@ -115,6 +115,31 @@ const searchCommitsByUserAndDate = async (
   return response.data.map((c) => c.sha);
 };
 
+export interface GetAdditionsAndDeletionsForCommitProps {
+  token: string;
+  owner: string;
+  repo: string;
+  ref: string;
+}
+const getAdditionsAndDeletionsForCommit = async (
+  props: GetAdditionsAndDeletionsForCommitProps
+) => {
+  const { token, owner, repo, ref } = props;
+  const octokit = new Octokit({ auth: token });
+  const response = await octokit.request(
+    "GET /repos/{owner}/{repo}/commits/{ref}",
+    {
+      owner,
+      repo,
+      ref,
+    }
+  );
+  return {
+    additions: response.data.stats?.additions || 0,
+    deletions: response.data.stats?.deletions || 0,
+  };
+};
+
 export class LOC {
   public static contributions(token: string, fromDate: Date, toDate: Date) {
     return contributions(token, fromDate, toDate);
@@ -126,5 +151,10 @@ export class LOC {
     props: SearchCommitsByUserAndDateProps
   ) {
     return searchCommitsByUserAndDate(props);
+  }
+  public static getAdditionsAndDeletionsForCommit(
+    props: GetAdditionsAndDeletionsForCommitProps
+  ) {
+    return getAdditionsAndDeletionsForCommit(props);
   }
 }
