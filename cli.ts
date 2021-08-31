@@ -17,7 +17,7 @@ import { sub } from "date-fns";
     "#authenticating-with-graphql";
   program
     .name("loc")
-    .version("2.0.0")
+    .version("2.0.1")
     .description(
       "Print info about lines of code contributed to GitHub by the authenticated" +
         " GitHub user. Prints something like:" +
