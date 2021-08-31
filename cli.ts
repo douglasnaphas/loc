@@ -17,12 +17,12 @@ import { sub } from "date-fns";
     "#authenticating-with-graphql";
   program
     .name("loc")
-    .version("0.1.0-f")
+    .version("2.0.0")
     .description(
       "Print info about lines of code contributed to GitHub by the authenticated" +
         " GitHub user. Prints something like:" +
         `\n` +
-        `[{"repo": "octocat/repo1","loc":44}]`
+        `[{"owner":"douglasnaphas","repo":"loc","ref":"9b6704d47d86e9733816023c8c53f4b976fc97a0","stats":{"additions":220,"deletions":0}}]`
     )
     .option(
       "-t, --token-file <PATH>",
